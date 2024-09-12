@@ -141,7 +141,7 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
   }
-  #score, #timer {
+  #score {
     font-size: 18px;
     font-weight: bold;
     color: #000000;
@@ -166,9 +166,9 @@
     <h1>생애주기 마스터</h1>
     <div id="rules">
       1. 같은 생애 주기를 합쳐 더 높은 단계로 성장시키세요.<br>
-      2. 2분 안에 가능한 많이 합쳐서 점수를 높이세요.<br>
+      2. 가능한 많이 합쳐서 점수를 높이세요.<br>
       3. 생애 주기 단계가 높아질수록 더 많은 점수를 획득할 수 있습니다.<br>
-      4. 제한 시간 내 최고 점수를 기록해 보세요!
+      4. 최고 점수를 기록해 보세요!
     </div>
     <input type="text" id="nickname" placeholder="닉네임을 입력하세요">
     <button id="start-button">게임 시작!</button>
@@ -178,7 +178,6 @@
     <div id="drop-zone">
       <div id="next-candy"></div>
       <div id="score">점수: 0</div>
-      <div id="timer">2:00</div>
     </div>
     <div id="preview-candy"></div>
   </div>
@@ -203,9 +202,6 @@ let candies = [];
 let nextCandyStage = 0;
 let score = 0;
 let playerNickname = "";
-let timeLeft = 120;
-let timerInterval;
-let previewCandy;
 
 document.getElementById('start-button').addEventListener('click', startGame);
 document.getElementById('restart-button').addEventListener('click', restartGame);
@@ -221,12 +217,10 @@ function startGame() {
   createPreviewCandy();
   updateNextCandy();
   updateScore();
-  startTimer();
 }
 
 function restartGame() {
   score = 0;
-  timeLeft = 120;
   candies.forEach(candy => candy.remove());
   candies = [];
   document.getElementById('end-screen').style.display = 'none';
@@ -234,7 +228,6 @@ function restartGame() {
   createPreviewCandy();
   updateNextCandy();
   updateScore();
-  startTimer();
 }
 
 function createPreviewCandy() {
@@ -265,25 +258,7 @@ function updatePreviewCandy() {
   previewCandy.style.height = size + 'px';
 }
 
-function startTimer() {
-  updateTimer();
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimer();
-    if (timeLeft <= 0) {
-      endGame();
-    }
-  }, 1000);
-}
-
-function updateTimer() {
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-}
-
 function endGame() {
-  clearInterval(timerInterval);
   document.getElementById('game-container').style.display = 'none';
   document.getElementById('end-screen').style.display = 'flex';
   document.getElementById('final-score').textContent = `최종 점수: ${score}점`;
@@ -450,18 +425,14 @@ function continuousCollisionCheck() {
 }
 
 document.getElementById('game-container').addEventListener('mousemove', (e) => {
-  if (timeLeft > 0) {
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left - stages[nextCandyStage].size / 2;
-    previewCandy.style.left = `${Math.max(0, Math.min(400 - stages[nextCandyStage].size, x))}px`;
-  }
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left - stages[nextCandyStage].size / 2;
+  previewCandy.style.left = `${Math.max(0, Math.min(400 - stages[nextCandyStage].size, x))}px`;
 });
 
 document.getElementById('game-container').addEventListener('click', (e) => {
-  if (timeLeft > 0) {
-    const x = parseFloat(previewCandy.style.left);
-    dropCandy(x);
-  }
+  const x = parseFloat(previewCandy.style.left);
+  dropCandy(x);
 });
 
 setInterval(continuousCollisionCheck, 100);
