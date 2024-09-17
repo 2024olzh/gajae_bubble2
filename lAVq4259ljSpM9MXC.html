@@ -53,7 +53,7 @@
   #game-container {
     width: 400px;
     height: 600px;
-    background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+    background-color: #E0F6FF; /* Pastel sky blue color */
     border: 3px solid #FF69B4;
     border-radius: 20px;
     position: relative;
@@ -64,26 +64,6 @@
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
-  }
-  #game-container::before,
-  #game-container::after {
-    content: '';
-    position: absolute;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    filter: blur(40px);
-  }
-  #game-container::before {
-    width: 150px;
-    height: 150px;
-    top: 10%;
-    left: 10%;
-  }
-  #game-container::after {
-    width: 200px;
-    height: 200px;
-    bottom: 20%;
-    right: 15%;
   }
   #game-container, #end-screen {
     display: none;
